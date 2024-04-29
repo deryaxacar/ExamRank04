@@ -1,0 +1,20 @@
+Atama adı : microshell
+Beklenen dosyalar : *.c *.h
+İzin verilen fonksiyonlar: malloc, free, write, close, fork, waitpid, signal, kill, exit, chdir, execve, dup, dup2, pipe, strcmp, strncmp
+--------------------------------------------------------------------------------------
+
+Bir kabuk komutu çalıştırıyormuş gibi davranacak bir program yazın
+- Çalıştırılacak komut satırı bu programın argümanları olacaktır
+- Yürütülebilir dosyanın yolu mutlak veya göreceli olabilir, ancak programınız bir yol oluşturmamalıdır (örneğin PATH değişkeninden)
+- Bash'te olduğu gibi "|" ve ";" kullanmalısınız
+	- hemen ardından veya öncesinde herhangi bir şey gelmeyen bir "|" veya ";" ifadesini asla denemeyeceğiz
+- Programınız yalnızca yerleşik cd komutunu argüman olarak bir yol ile uygulamalıdır ('-' veya parametre yok)
+	- Eğer cd yanlış sayıda argümana sahipse, programınız STDERR'de "error: cd: incorrect arguments" ve ardından bir '\n' yazdırmalıdır
+	- Eğer cd başarısız olursa, programınız "error: cd: cannot change directory to path_to_change" ve ardından STDERR'de path_to_change yerine cd argümanını koyarak bir '\n' yazdırmalıdır
+	- bir cd komutundan önce veya sonra asla "|" işareti kullanılmaz
+- Herhangi bir joker karakteri yönetmenize gerek yoktur (*, ~ vb...)
+- Ortam değişkenlerini yönetmenize gerek yoktur ($BLA ...)
+- Eğer execve ve chdir dışında bir sistem çağrısı hata döndürürse, programınız hemen STDERR'de "error: fatal" ve ardından bir '\n' yazdırmalı ve programdan çıkmalıdır
+- Eğer eski
+
+Translated with DeepL.com (free version)
