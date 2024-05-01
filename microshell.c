@@ -50,8 +50,7 @@ int exec(char **argv, int i)
 
 int main(int argc, char **argv)
 {
-    int    i = 0;
-    int    status = 0;
+    int    i = 0, status = 0;
 
     if (argc > 1)
     {
