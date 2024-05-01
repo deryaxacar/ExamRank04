@@ -28,9 +28,6 @@ int exec(char **av, int i) {
         // Çıkışları pipe ile eşleştirir
         if (has_pipe && (dup2(fd[1], 1) == -1 || close(fd[0]) == -1 || close(fd[1]) == -1))
             return err("error: fatal\n"); // Pipe hatası
-        // "cd" komutunu özel olarak işler
-        if (!strcmp(*av, "cd"))
-            return cd(av, i); // "cd" komutu için özel işlev çağrısı
         // Komutu çalıştırır
         execve(*av, av, __environ);
         return err("error: cannot execute "), err(*av), err("\n"); // Hata durumunda mesaj döndürür
