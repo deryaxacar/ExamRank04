@@ -42,8 +42,7 @@ int exec(char **av, int i)
 
 int main(int ac, char **av)
 {
-    int i = 0;
-    int status = 0;
+    int i = 0, status = 0;
 
     if(ac > 1)
     {
