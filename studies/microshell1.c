@@ -4,9 +4,8 @@
 
 // Hata mesajlarını yazan ve 1 döndüren fonksiyon
 int err(char *str) {
-    while (*str) {
+    while (*str)
         write(2, str++, 1); // Her karakteri standart hata çıkışına yazar
-    }
     write(2, "\n", 1); // Sonuna yeni satır ekler
     return 1; // Hata durumunda 1 döndürür
 }
@@ -17,25 +16,21 @@ int exec(char **av, int i) {
     int status; // Çocuk sürecin durumu için
     int has_pipe = av[i] && !strcmp(av[i], "|"); // Pipe olup olmadığını kontrol eder
 
-    if (!has_pipe) {
+    if (!has_pipe)
         return err("error"); // Pipe yoksa hata döndürür
-    }
 
-    if (has_pipe && pipe(fd) == -1) {
+    if (has_pipe && pipe(fd) == -1)
         return err("error: fatal\n"); // Pipe oluşturma hatası
-    }
 
     int pid = fork(); // Çocuk süreci oluşturur
     if (!pid) { // Çocuk süreç
         av[i] = 0; // Komut listesini pipe'a ayırır
         // Çıkışları pipe ile eşleştirir
-        if (has_pipe && (dup2(fd[1], 1) == -1 || close(fd[0]) == -1 || close(fd[1]) == -1)) {
+        if (has_pipe && (dup2(fd[1], 1) == -1 || close(fd[0]) == -1 || close(fd[1]) == -1))
             return err("error: fatal\n"); // Pipe hatası
-        }
         // "cd" komutunu özel olarak işler
-        if (!strcmp(*av, "cd")) {
+        if (!strcmp(*av, "cd"))
             return cd(av, i); // "cd" komutu için özel işlev çağrısı
-        }
         // Komutu çalıştırır
         execve(*av, av, __environ);
         return err("error: cannot execute "), err(*av), err("\n"); // Hata durumunda mesaj döndürür
@@ -44,9 +39,8 @@ int exec(char **av, int i) {
     // Ana süreç
     waitpid(pid, &status, 0); // Çocuk sürecin bitmesini bekler
     // Girdiyi pipe ile eşleştirir
-    if (has_pipe && (dup2(fd[0], 0) == -1 || close(fd[0]) == -1 || close(fd[1]) == -1)) {
+    if (has_pipe && (dup2(fd[0], 0) == -1 || close(fd[0]) == -1 || close(fd[1]) == -1))
         return err("error: fatal\n"); // Pipe hatası
-    }
     return WIFEXITED(status) && WEXITSTATUS(status); // Çocuk sürecin durumunu döndürür
 }
 
@@ -59,22 +53,18 @@ int main(int ac, char **av) {
             av += i; // Argüman listesini ayarlar
             i = 0;
             // Komutları pipe veya noktalı virgül ile ayırır
-            while (av[i] && strcmp(av[i], "|") && strcmp(av[i], ";")) {
+            while (av[i] && strcmp(av[i], "|") && strcmp(av[i], ";"))
                 i++;
-            }
-
             // "cd" komutu işlenir
             if (!strcmp(av[0], "cd")) {
-                if (i != 2) {
+                if (i != 2)
                     err("error: cd: bad arguments"); // "cd" için kötü argüman hatası
-                } else if (chdir(av[1]) != 0) {
+                else if (chdir(av[1]) != 0)
                     err("error: cd: cannot change directory to "), err(av[1]); // "cd" başarısız olduysa hata
-                }
             }
             // Diğer komutlar için
-            else if (i) {
+            else if (i)
                 status = exec(av, i); // "exec" fonksiyonu ile komutu çalıştırır
-            }
         }
     }
     return status; // Programın çıkış durumu
