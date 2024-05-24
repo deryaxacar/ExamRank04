@@ -1,0 +1,31 @@
+Atama adı : microshell
+Beklenen dosyalar : *.c *.h
+İzin verilen fonksiyonlar: malloc, free, write, close, fork, waitpid, signal, kill, exit, chdir, execve, dup, dup2, pipe, strcmp, strncmp
+--------------------------------------------------------------------------------------
+
+Bir kabuk komutu çalıştırıyormuş gibi davranacak bir program yazın
+- Çalıştırılacak komut satırı bu programın argümanları olacaktır
+- Yürütülebilir dosyanın yolu mutlak veya göreceli olabilir ancak programınız bir yol oluşturmamalıdır (örneğin PATH değişkeninden)
+- Bash'teki gibi "|" ve ";" kullanmalısınız
+	- hemen ardından veya öncesinde hiçbir şey veya "|" veya ";" gelmeyen bir "|"i asla denemeyeceğiz
+- Programınız yerleşik cd komutunu yalnızca argüman olarak bir yol ile uygulamalıdır ('-' yok veya parametresiz)
+	- cd yanlış sayıda argümana sahipse, programınız STDERR'de "hata: cd: hatalı argümanlar" ve ardından bir '\n' yazdırmalıdır
+	- cd başarısız olursa programınız STDERR'de "error: cd: cannot change directory to path_to_change" ve ardından path_to_change yerine cd argümanını koyarak bir '\n' yazdırmalıdır
+	- bir cd komutunun hemen ardından veya öncesinde asla bir "|" işareti bulunmaz
+- Herhangi bir joker karakteri yönetmenize gerek yoktur (*, ~ vb...)
+- Ortam değişkenlerini yönetmenize gerek yoktur ($BLA ...)
+- Eğer execve ve chdir dışında bir sistem çağrısı hata döndürürse, programınız STDERR'de hemen "error: fatal" ve ardından bir '\n' yazdırmalı ve programdan çıkmalıdır
+- Eğer execve başarısız olursa STDERR'de "error: cannot execute executable_that_failed" ve ardından execable_that_failed yerine başarısız olan çalıştırılabilir dosyanın yolunu içeren bir '\n' yazdırmalısınız (execve'nin ilk argümanı olmalıdır)
+- "Açık dosya" sayısını 30'dan azla sınırlasak bile programınız yüzlerce "|" den fazlasını yönetebilmelidir.
+
+örneğin bu çalışmalıdır:
+$>./microshell /bin/ls "|" /usr/bin/grep microshell ";" /bin/echo microshell'imi seviyorum
+microshell
+microshell'i̇mi̇ sevi̇yorum
+$>
+
+İpuçları:
+execve'ye ortam değişkenini aktarmayı unutmayın
+
+İpuçları:
+Dosya tanımlayıcılarını sızdırmayın!
